@@ -88,9 +88,9 @@ O banco está criado, mas a aplicação ainda precisa da migração e do Worker 
 
 O deploy de produção deve acontecer uma única vez após:
 
-- [ ] confirmar que a conta GitHub dona do repositório privado `mundo-da-laurinha` tem permissão de escrita pela conexão usada;
-- [ ] revisar e versionar o projeto completo, a migração, a documentação e os recursos visuais aprovados;
-- [ ] instalar dependências e obter `npm run typecheck`, `npm test` e `npm run build` sem erros;
+- [x] confirmar que a conta GitHub dona do repositório privado `mundo-da-laurinha` tem permissão de escrita pela conexão usada;
+- [x] revisar e versionar o projeto completo, a migração, a documentação e os recursos visuais aprovados;
+- [x] instalar dependências e obter `npm run typecheck`, `npm test` e `npm run build` sem erros;
 - [ ] validar os 20 fluxos de jogo em celular, tablet e desktop, incluindo navegação por teclado e redução de movimento;
 - [ ] aplicar e conferir a migração D1;
 - [ ] definir `APP_ORIGIN`, o segredo de configuração e o destino do proxy sem salvar segredos no Git;
