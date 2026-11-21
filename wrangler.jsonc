@@ -6,7 +6,7 @@
   "compatibility_date": "2026-11-21",
   "workers_dev": true,
   "vars": {
-    "APP_ORIGIN": "http://localhost:5173"
+    "APP_ORIGIN": "https://mundo-da-laurinha.netlify.app"
   },
   "d1_databases": [
     {
