@@ -441,7 +441,7 @@ onUnmounted(() => {
       </section>
     </main>
 
-    <footer class="footer"><div class="footer-brand"><span>✿</span> O Mundo da Laurinha</div><p>Um espaço privado da família · sem anúncios, sem pontuações e sem pressa.</p><button v-if="installPrompt" class="install-button" @click="installApp">Adicionar ao aparelho</button><button class="footer-parent" @click="openParent">Área dos responsáveis</button></footer>
+    <footer class="footer"><div class="footer-brand"><span>✿</span> O Mundo da Laurinha</div><p>Um espaço para brincar em família · sem anúncios, sem pontuações e sem pressa.</p><button v-if="installPrompt" class="install-button" @click="installApp">Adicionar ao aparelho</button><button class="footer-parent" @click="openParent">Área dos responsáveis</button><p class="footer-credit">Desenvolvido por LMX Soluções Digitais/Segundo Almeida</p></footer>
   </div>
 
   <div v-if="parentOpen" class="modal-backdrop" @click.self="parentOpen = false">

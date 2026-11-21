@@ -1,6 +1,6 @@
 # O Mundo da Laurinha
 
-Experiência privada de histórias e brincadeiras para a Laurinha, feita para usar junto com um responsável. O projeto é uma PWA instalável, funciona sem internet depois do primeiro carregamento e oferece 20 brincadeiras sem cronômetro, pontuação, punição, publicidade ou rolagem infinita.
+Experiência de histórias e brincadeiras para a Laurinha, feita para usar junto com um responsável. O site é público; o progresso fica no aparelho e a sincronização exige conta adulta autenticada. O projeto é uma PWA instalável, funciona sem internet depois do primeiro carregamento e oferece 20 brincadeiras sem cronômetro, pontuação, punição, publicidade ou rolagem infinita.
 
 ## Escopo implementado
 
@@ -95,7 +95,7 @@ O banco está criado, mas a aplicação ainda precisa da migração e do Worker 
 4. Configurar o nome Netlify para corresponder ao proxy já preparado em `netlify.toml` (`mundo-da-laurinha-api.workers.dev`) e à origem definida em `APP_ORIGIN`.
 5. Na área **Responsáveis**, escolher **Criar primeira conta**, informar o e-mail/senha-frase da família e usar `LAURINHA_SETUP_TOKEN` uma única vez. Guarde os dois segredos fora do Git: o token é necessário para recuperar o acesso; trocar o pepper exige redefinir a senha. Não colocar credenciais da família no repositório.
 
-## Gate do deploy único
+## Publicação coordenada
 
 O deploy de produção deve acontecer uma única vez após:
 
@@ -104,8 +104,9 @@ O deploy de produção deve acontecer uma única vez após:
 - [x] instalar dependências e obter `npm run typecheck`, `npm test` e `npm run build` sem erros;
 - [ ] validar os 20 fluxos de jogo em celular, tablet e desktop, incluindo navegação por teclado e redução de movimento;
 - [ ] aplicar e conferir a migração D1;
-- [ ] definir `APP_ORIGIN`, o segredo de configuração e o destino do proxy sem salvar segredos no Git;
-- [ ] testar login/logout, sincronização entre aparelhos, modo offline, retomada da conexão e bloqueio de área adulta;
-- [ ] conferir que os dados sincronizados não incluem respostas, desenhos ou informações pessoais da criança.
+- [ ] definir `APP_ORIGIN`, os segredos de configuração e o destino do proxy sem salvar segredos no Git;
+- [ ] testar login/logout, sincronização entre aparelhos, modo offline, retomada da conexão e bloqueio da área adulta;
+- [ ] conferir que os dados sincronizados não incluem respostas, desenhos ou informações pessoais da criança;
+- [ ] publicar uma única vez o frontend conectado ao repositório e o Worker já configurado.
 
 Não publicar durante esta preparação. Após os gates, fazer uma implantação coordenada do Worker e da interface, sem publicar etapas intermediárias.
