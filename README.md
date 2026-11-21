@@ -92,7 +92,7 @@ O banco está criado, mas a aplicação ainda precisa da migração e do Worker 
    ```
 
 3. Publicar o Worker somente depois do gate de versão aprovado. O segredo é usado uma vez para criar a primeira conta adulta.
-4. Configurar o nome Netlify para corresponder ao proxy já preparado em `netlify.toml` (`mundo-da-laurinha-api.workers.dev`) e à origem definida em `APP_ORIGIN`.
+4. O proxy de `netlify.toml` aponta para `mundo-da-laurinha-api.dona-de-ouro-demo.workers.dev`; mantenha esse destino e `APP_ORIGIN` alinhados com a conta Cloudflare e o endereço Netlify do projeto.
 5. Na área **Responsáveis**, escolher **Criar primeira conta**, informar o e-mail/senha-frase da família e usar `LAURINHA_SETUP_TOKEN` uma única vez. Guarde os dois segredos fora do Git: o token é necessário para recuperar o acesso; trocar o pepper exige redefinir a senha. Não colocar credenciais da família no repositório.
 
 ## Publicação coordenada
@@ -104,7 +104,8 @@ O deploy de produção deve acontecer uma única vez após:
 - [x] instalar dependências e obter `npm run typecheck`, `npm test` e `npm run build` sem erros;
 - [ ] validar os 20 fluxos de jogo em celular, tablet e desktop, incluindo navegação por teclado e redução de movimento;
 - [ ] aplicar e conferir a migração D1;
-- [ ] definir `APP_ORIGIN`, os segredos de configuração e o destino do proxy sem salvar segredos no Git;
+- [x] definir `APP_ORIGIN` e alinhar o proxy com o subdomínio Workers da conta, sem salvar segredos no Git;
+- [ ] cadastrar os segredos de configuração no Worker fora do Git;
 - [ ] testar login/logout, sincronização entre aparelhos, modo offline, retomada da conexão e bloqueio da área adulta;
 - [ ] conferir que os dados sincronizados não incluem respostas, desenhos ou informações pessoais da criança;
 - [ ] publicar uma única vez o frontend conectado ao repositório e o Worker já configurado.
