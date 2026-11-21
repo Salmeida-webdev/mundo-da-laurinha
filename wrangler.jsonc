@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mundo-da-laurinha-api",
+  "account_id": "d082f4c6eb0dc8cd2ce679e521118e70",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-21",
+  "workers_dev": true,
+  "vars": {
+    "APP_ORIGIN": "http://localhost:5173"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "laurinha-db",
+      "database_id": "4de45b92-cea3-4d4f-a0af-3f22fd1de595",
+      "migrations_dir": "worker/migrations"
+    }
+  ]
+}

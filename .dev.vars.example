@@ -1,0 +1,2 @@
+LAURINHA_SETUP_TOKEN="replace-with-a-random-secret-of-at-least-32-characters"
+PASSWORD_PEPPER="use-a-different-random-secret-of-at-least-32-characters"

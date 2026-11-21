@@ -1,0 +1,43 @@
+export type PlayMode = 'choice' | 'sequence' | 'movement' | 'path' | 'draw' | 'color' | 'sound' | 'shapes' | 'story' | 'rhyme' | 'sort' | 'observe' | 'memory'
+
+export interface GameOption {
+  label: string
+  symbol: string
+  response?: string
+}
+
+export interface Game {
+  id: number
+  slug: string
+  title: string
+  short: string
+  area: string
+  mode: PlayMode
+  prompt: string
+  choices?: GameOption[]
+  sequence?: string[]
+  note: string
+}
+
+export const games: Game[] = [
+  { id: 1, slug: 'como-se-sente', title: 'Como se sente o personagem?', short: 'Uma história para conversar sobre sentimentos.', area: 'Sentimentos', mode: 'choice', prompt: 'A coelhinha deixou cair a torre de blocos. O que ela pode estar sentindo?', choices: [{ label: 'Triste', symbol: '🥺', response: 'Talvez ela esteja triste. Podemos perguntar do que precisa.' }, { label: 'Surpresa', symbol: '😮', response: 'Também pode ser surpresa! Cada pessoa sente de um jeito.' }, { label: 'Com vontade de tentar de novo', symbol: '🌱', response: 'Ela pode querer tentar de novo, com calma.' }], note: 'Não existe uma única emoção certa. A conversa vale mais que a resposta.' },
+  { id: 2, slug: 'vamos-construir', title: 'Vamos construir juntos', short: 'Compartilhar ideias e combinar uma construção.', area: 'Cooperação', mode: 'shapes', prompt: 'Vamos imaginar uma casinha. Escolha algumas peças para montar a brincadeira.', note: 'Convide outra pessoa a escolher uma peça também. Sem competição.' },
+  { id: 3, slug: 'eu-escolho-eu-tento', title: 'Eu escolho, eu tento', short: 'Fazer uma escolha e experimentar sem pressa.', area: 'Autonomia', mode: 'choice', prompt: 'O que você gostaria de explorar primeiro?', choices: [{ label: 'Uma história', symbol: '📖' }, { label: 'Uma música', symbol: '🎵' }, { label: 'Um desenho', symbol: '🖍️' }], note: 'Pode mudar de ideia quando quiser.' },
+  { id: 4, slug: 'pequenas-rotinas', title: 'Pequenas rotinas', short: 'Colocar ações do dia a dia em uma ordem possível.', area: 'Autonomia', mode: 'sequence', prompt: 'Vamos organizar uma rotina de preparar o lanche.', sequence: ['Lavar as mãos', 'Escolher a fruta', 'Sentar para comer'], note: 'As rotinas podem ter ordens diferentes em cada casa.' },
+  { id: 5, slug: 'meu-corpo-conta-historias', title: 'Meu corpo conta histórias', short: 'Inventar gestos e movimentos do jeitinho que der.', area: 'Movimento', mode: 'movement', prompt: 'Como uma borboleta passearia por um jardim?', choices: [{ label: 'Abrir e fechar os braços', symbol: '🦋' }, { label: 'Mexer os dedos como asas', symbol: '✨' }, { label: 'Inventar outro movimento', symbol: '💃' }], note: 'Faça movimentos confortáveis e com espaço ao redor.' },
+  { id: 6, slug: 'caminhos-da-laurinha', title: 'Caminhos da Laurinha', short: 'Explorar dentro, fora, em cima e embaixo.', area: 'Espaço', mode: 'path', prompt: 'A bolinha quer chegar até a caixa. Por onde ela pode passar?', choices: [{ label: 'Por dentro do túnel', symbol: '🕳️' }, { label: 'Por cima da ponte', symbol: '🌉' }, { label: 'Contornando a caixa', symbol: '↪️' }], note: 'Aponte objetos do ambiente e conversem sobre onde estão.' },
+  { id: 7, slug: 'atelie-de-maos', title: 'Ateliê de mãos', short: 'Experimentar cores e fazer traços livres.', area: 'Criação', mode: 'draw', prompt: 'Que marcas e caminhos sua mão consegue criar?', note: 'Não precisa desenhar algo reconhecível. Explorar já é brincar.' },
+  { id: 8, slug: 'cade-esta-cor', title: 'Cadê esta cor?', short: 'Encontrar cores e contar onde aparecem.', area: 'Cores', mode: 'color', prompt: 'Vamos procurar algo rosa pelo jardim da Laurinha.', choices: [{ label: 'Flor rosa', symbol: '🌸' }, { label: 'Folha verde', symbol: '🍃' }, { label: 'Sol amarelo', symbol: '☀️' }], note: 'Vale apontar, falar o nome ou só observar a cor.' },
+  { id: 9, slug: 'orquestra-de-objetos', title: 'Orquestra de objetos', short: 'Ouvir e criar ritmos com sons suaves.', area: 'Sons', mode: 'sound', prompt: 'Toque nos instrumentos para ouvir sons diferentes.', note: 'Use o volume confortável. Você também pode brincar sem som.' },
+  { id: 10, slug: 'formas-que-viram-coisas', title: 'Formas que viram coisas', short: 'Combinar formas e inventar o que elas podem ser.', area: 'Formas', mode: 'shapes', prompt: 'Escolha formas para criar uma figura que só existe na sua imaginação.', note: 'Não há modelo para copiar nem resposta certa.' },
+  { id: 11, slug: 'livro-que-conversa', title: 'O livro que conversa', short: 'Escolher o rumo de uma história compartilhada.', area: 'Histórias', mode: 'story', prompt: 'A Laurinha encontrou um livro brilhante. Quem aparece na primeira página?', choices: [{ label: 'Uma raposinha curiosa', symbol: '🦊' }, { label: 'Um passarinho cantor', symbol: '🐦' }, { label: 'Uma estrela falante', symbol: '⭐' }], note: 'Conte a história junto com a criança e acolha ideias inesperadas.' },
+  { id: 12, slug: 'o-que-esta-acontecendo', title: 'O que está acontecendo?', short: 'Observar uma cena e imaginar o que pode vir depois.', area: 'Observação', mode: 'choice', prompt: 'A nuvem ficou escura e o vento começou a soprar. O que talvez aconteça?', choices: [{ label: 'Pode chover', symbol: '🌧️' }, { label: 'As folhas podem dançar', symbol: '🍂' }, { label: 'Vamos olhar mais um pouco', symbol: '👀' }], note: 'Conversar e observar é a brincadeira; não é um teste.' },
+  { id: 13, slug: 'sons-que-rimam', title: 'Sons que rimam', short: 'Brincar de escutar palavras parecidas.', area: 'Palavras', mode: 'rhyme', prompt: 'Qual palavra parece rimar com “pão”?', choices: [{ label: 'Mão', symbol: '🤚' }, { label: 'Flor', symbol: '🌷' }, { label: 'Casa', symbol: '🏠' }], note: 'A criança pode repetir, apontar ou apenas escutar.' },
+  { id: 14, slug: 'invente-uma-historia', title: 'Invente uma história', short: 'Misturar personagens e lugares para imaginar.', area: 'Histórias', mode: 'story', prompt: 'Escolha quem vai passear e onde a aventura começa.', choices: [{ label: 'Um gato na praia', symbol: '🐈' }, { label: 'Uma fada no jardim', symbol: '🧚' }, { label: 'Um dinossauro na lua', symbol: '🦕' }], note: 'Dê espaço para a criança completar com as próprias palavras.' },
+  { id: 15, slug: 'cestas-curiosas', title: 'Cestas curiosas', short: 'Agrupar objetos por cor, tamanho ou forma.', area: 'Exploração', mode: 'sort', prompt: 'Vamos colocar na cesta tudo que é redondinho.', choices: [{ label: 'Bola', symbol: '⚽' }, { label: 'Laranja', symbol: '🍊' }, { label: 'Livro', symbol: '📘' }], note: 'Um objeto pode pertencer a mais de um grupo. Vamos explorar juntos.' },
+  { id: 16, slug: 'mercadinho-de-brinquedo', title: 'Mercadinho de brinquedo', short: 'Separar itens para uma cesta de faz de conta.', area: 'Faz de conta', mode: 'sort', prompt: 'O que você gostaria de colocar na cestinha do passeio?', choices: [{ label: 'Maçã', symbol: '🍎' }, { label: 'Pão', symbol: '🥖' }, { label: 'Flor', symbol: '🌼' }], note: 'Contem e comparem do jeito natural, sem exigir números.' },
+  { id: 17, slug: 'antes-e-depois', title: 'Antes e depois', short: 'Organizar cenas e conversar sobre o que mudou.', area: 'Sequências', mode: 'sequence', prompt: 'Como uma sementinha pode virar uma flor?', sequence: ['Uma semente descansa na terra', 'Um brotinho aparece', 'A flor se abre para o sol'], note: 'A sequência é uma oportunidade para conversar sobre passagem do tempo.' },
+  { id: 18, slug: 'pequenos-cientistas', title: 'Pequenos cientistas', short: 'Observar fenômenos simples e descrever mudanças.', area: 'Descobertas', mode: 'observe', prompt: 'O que podemos perceber quando a luz encontra uma parede?', choices: [{ label: 'Uma sombra pode aparecer', symbol: '🌤️' }, { label: 'A parede pode mudar de cor', symbol: '🎨' }, { label: 'Vamos mexer a mão e olhar', symbol: '🖐️' }], note: 'Explore junto com um adulto e use materiais seguros do cotidiano.' },
+  { id: 19, slug: 'lembra-e-combina', title: 'Lembra e combina', short: 'Repetir uma sequência curtinha sem cobrança.', area: 'Memória', mode: 'memory', prompt: 'Olhe a sequência de bichinhos e tente repeti-la.', choices: [{ label: 'Gato', symbol: '🐱' }, { label: 'Pato', symbol: '🦆' }, { label: 'Sapo', symbol: '🐸' }], note: 'Repita quantas vezes quiser. Não há erro ou pontuação.' },
+  { id: 20, slug: 'siga-pare-e-invente', title: 'Siga, pare e invente', short: 'Mover, fazer uma pausa e criar um gesto.', area: 'Movimento', mode: 'movement', prompt: 'Quando a música imaginária começa, que movimento aparece?', choices: [{ label: 'Balançar devagar', symbol: '🌙' }, { label: 'Bater palminhas suaves', symbol: '👏' }, { label: 'Inventar um gesto', symbol: '✨' }], note: 'Brinque em um espaço livre. Parar também faz parte da música.' },
+]
