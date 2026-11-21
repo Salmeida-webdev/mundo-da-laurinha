@@ -8,7 +8,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'script-defer',
-      includeAssets: ['brand/logo-laurinha.png', 'brand/momentos-laurinha.png', 'brand/app-icon.svg'],
+      includeAssets: ['brand/logo-laurinha.png', 'brand/momentos-laurinha.png', 'brand/app-icon.svg', 'brand/app-icon-192.png', 'brand/app-icon-512.png'],
       manifest: {
         name: 'O Mundo da Laurinha',
         short_name: 'Mundo da Laurinha',
@@ -21,7 +21,8 @@ export default defineConfig({
         background_color: '#fff8f7',
         theme_color: '#fff8f7',
         icons: [
-          { src: '/brand/app-icon.svg', sizes: '512x512', type: 'image/svg+xml', purpose: 'any' },
+          { src: '/brand/app-icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/brand/app-icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
         ],
       },
       workbox: {

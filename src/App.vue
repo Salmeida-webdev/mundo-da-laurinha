@@ -7,11 +7,18 @@ import type { AdultSession } from './lib/api'
 import type { ProgressMap } from './lib/progress'
 import { clearProgress, mergeProgress, readProgress, withCompletion, withFavorite, writeProgress } from './lib/progress'
 
+interface InstallPromptEvent extends Event {
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform?: string }>
+}
+
 const progress = reactive<ProgressMap>(readProgress())
 const selectedGame = ref<Game | null>(null)
 const selectedArea = ref('Todas')
 const favoritesOnly = ref(false)
 const parentOpen = ref(false)
+const installHelpOpen = ref(false)
+const installStatus = ref('')
 const session = ref<AdultSession | null>(null)
 const setupAvailable = ref(false)
 const loginMode = ref<'login' | 'setup' | 'recover'>('login')
@@ -36,7 +43,9 @@ const selectedItems = ref<string[]>([])
 const canvas = ref<HTMLCanvasElement | null>(null)
 const brushColor = ref('#d95a86')
 const isDrawing = ref(false)
-let installPrompt: Event | null = null
+const installPrompt = ref<InstallPromptEvent | null>(null)
+const isStandalone = ref(window.matchMedia('(display-mode: standalone)').matches || (navigator as Navigator & { standalone?: boolean }).standalone === true)
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
 
 const areas = ['Todas', ...new Set(games.map((game) => game.area))]
 const visibleGames = computed(() => games.filter((game) => {
@@ -267,14 +276,35 @@ async function openParent() {
 
 function handleOnline() { online.value = true; void syncNow() }
 function handleOffline() { online.value = false; syncLabel.value = session.value ? 'Sem conexão · alterações ficam neste aparelho' : 'Salvo neste aparelho' }
-function handleInstall(event: Event) { event.preventDefault(); installPrompt = event }
+function handleInstall(event: Event) {
+  event.preventDefault()
+  installPrompt.value = event as InstallPromptEvent
+}
+
+function handleAppInstalled() {
+  installPrompt.value = null
+  isStandalone.value = true
+  installStatus.value = 'O Mundo da Laurinha foi adicionado ao aparelho.'
+}
 
 async function installApp() {
-  if (!installPrompt) return
-  const promptEvent = installPrompt as Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> }
-  await promptEvent.prompt()
-  await promptEvent.userChoice
-  installPrompt = null
+  if (isStandalone.value) return
+  const promptEvent = installPrompt.value
+  if (!promptEvent) {
+    installHelpOpen.value = true
+    return
+  }
+  try {
+    await promptEvent.prompt()
+    const choice = await promptEvent.userChoice
+    installStatus.value = choice.outcome === 'accepted'
+      ? 'A instalação começou. O aplicativo aparecerá na tela inicial quando terminar.'
+      : 'Tudo bem. Você pode adicionar o aplicativo ao aparelho depois.'
+  } catch {
+    installStatus.value = 'Não foi possível abrir a instalação agora. Tente pelo menu do navegador.'
+  } finally {
+    installPrompt.value = null
+  }
 }
 
 function deleteLocalData() {
@@ -290,6 +320,7 @@ onMounted(async () => {
   window.addEventListener('online', handleOnline)
   window.addEventListener('offline', handleOffline)
   window.addEventListener('beforeinstallprompt', handleInstall)
+  window.addEventListener('appinstalled', handleAppInstalled)
   try {
     const result = await api.session()
     session.value = result.session
@@ -302,6 +333,7 @@ onUnmounted(() => {
   window.removeEventListener('online', handleOnline)
   window.removeEventListener('offline', handleOffline)
   window.removeEventListener('beforeinstallprompt', handleInstall)
+  window.removeEventListener('appinstalled', handleAppInstalled)
 })
 </script>
 
@@ -441,7 +473,24 @@ onUnmounted(() => {
       </section>
     </main>
 
-    <footer class="footer"><div class="footer-brand"><span>✿</span> O Mundo da Laurinha</div><p>Um espaço para brincar em família · sem anúncios, sem pontuações e sem pressa.</p><button v-if="installPrompt" class="install-button" @click="installApp">Adicionar ao aparelho</button><button class="footer-parent" @click="openParent">Área dos responsáveis</button><p class="footer-credit">Desenvolvido por LMX Soluções Digitais/Segundo Almeida</p></footer>
+    <footer class="footer"><div class="footer-brand"><span>✿</span> O Mundo da Laurinha</div><p>Um espaço para brincar em família · sem anúncios, sem pontuações e sem pressa.</p><button class="install-button" :disabled="isStandalone" @click="installApp">{{ isStandalone ? 'Já instalado' : 'Adicionar ao aparelho' }}</button><button class="footer-parent" @click="openParent">Área dos responsáveis</button><p v-if="installStatus" class="install-status" role="status">{{ installStatus }}</p><p class="footer-credit">Desenvolvido por LMX Soluções Digitais/Segundo Almeida</p></footer>
+  </div>
+
+  <div v-if="installHelpOpen" class="modal-backdrop" @click.self="installHelpOpen = false">
+    <section class="parent-modal install-modal" role="dialog" aria-modal="true" aria-labelledby="install-title">
+      <button class="modal-close" aria-label="Fechar instruções de instalação" @click="installHelpOpen = false">×</button>
+      <span class="modal-icon">📲</span><span class="eyebrow">LEVE A BRINCADEIRA COM VOCÊ</span>
+      <h2 id="install-title">Adicionar ao aparelho</h2>
+      <template v-if="isIOS">
+        <p class="parent-description">No iPhone ou iPad, a instalação é feita pelo Safari:</p>
+        <ol class="install-steps"><li>Abra esta página no Safari.</li><li>Toque em <strong>Compartilhar</strong> (o quadrado com a seta para cima).</li><li>Escolha <strong>Adicionar à Tela de Início</strong> e confirme.</li></ol>
+      </template>
+      <template v-else>
+        <p class="parent-description">No Android ou computador, procure a opção de instalação do navegador:</p>
+        <ol class="install-steps"><li>No Android, abra o menu <strong>⋮</strong> e escolha <strong>Instalar app</strong> ou <strong>Adicionar à tela inicial</strong>.</li><li>No computador, use o ícone de instalação na barra de endereço ou o menu do navegador.</li><li>Confirme para criar o atalho do Mundo da Laurinha.</li></ol>
+      </template>
+      <button class="primary-button install-close" @click="installHelpOpen = false">Entendi</button>
+    </section>
   </div>
 
   <div v-if="parentOpen" class="modal-backdrop" @click.self="parentOpen = false">

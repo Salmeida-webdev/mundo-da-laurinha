@@ -29,6 +29,7 @@ Experiência de histórias e brincadeiras para a Laurinha, feita para usar junto
 
 - **Frontend:** Vue 3, TypeScript e Vite.
 - **Instalação/offline:** `vite-plugin-pwa` e Workbox; arquivos de interface e imagens são pré-armazenados. Progresso fica salvo no aparelho e pode ser usado offline.
+- **Ajuda de instalação:** o botão inicia o prompt nativo quando o navegador oferece essa função; em navegadores sem prompt, mostra instruções para iOS, Android e computador.
 - **Área adulta:** conta autenticada no Cloudflare Worker. A primeira conta precisa do segredo `LAURINHA_SETUP_TOKEN`, cadastrado como segredo do Worker. Cadastro aberto fica bloqueado depois da criação inicial. Senhas são armazenadas como HMAC-SHA-256 com salt por conta e um `PASSWORD_PEPPER` secreto; a recuperação invalida sessões anteriores.
 - **Dados entre aparelhos:** Cloudflare Worker + Cloudflare D1. O proxy de `/api/*` do Netlify mantém a API na mesma origem do site para usar cookie `HttpOnly`, `SameSite=Lax`.
 - **Dados persistidos:** somente ID do jogo, quantidade de conclusões, data da última brincadeira e estado/data da favorita. Desenhos, escolhas, respostas, nome completo, data de nascimento e histórico clínico não são enviados ao banco.
@@ -74,40 +75,30 @@ Os testes exercitam o catálogo de 20 brincadeiras, a combinação do progresso 
 - Réplicas de leitura: desativadas; o app é pequeno e prioriza uma escrita simples e previsível.
 - Migração inicial: `worker/migrations/0001_initial.sql`.
 
-O banco está criado, mas a aplicação ainda precisa da migração e do Worker publicado para que a área adulta funcione em produção. A interface infantil continua funcionando sem o backend.
+O banco remoto já recebeu a migração inicial e o Worker `mundo-da-laurinha-api` está publicado. O endpoint de saúde foi conferido; as rotas de conta dependem da configuração do primeiro acesso pela família.
 
 ## Configurar o primeiro acesso
 
-1. Aplicar a migração em D1 depois de revisar/commitar a versão:
+1. A migração inicial já foi aplicada. Aplicar `npm run cf:migrate:remote` somente quando uma nova migração versionada for adicionada:
 
    ```bash
    npm run cf:migrate:remote
    ```
 
-2. Definir `APP_ORIGIN` para a origem Netlify exata e cadastrar dois segredos aleatórios diferentes, com pelo menos 32 caracteres. Nunca incluir esses segredos em arquivo versionado:
+2. `APP_ORIGIN` já aponta para a origem Netlify do projeto, e os segredos `LAURINHA_SETUP_TOKEN` e `PASSWORD_PEPPER` já estão configurados no Worker. Nunca incluir seus valores em arquivo versionado:
 
    ```bash
    npx wrangler secret put LAURINHA_SETUP_TOKEN
    npx wrangler secret put PASSWORD_PEPPER
    ```
 
-3. Publicar o Worker somente depois do gate de versão aprovado. O segredo é usado uma vez para criar a primeira conta adulta.
-4. O proxy de `netlify.toml` aponta para `mundo-da-laurinha-api.dona-de-ouro-demo.workers.dev`; mantenha esse destino e `APP_ORIGIN` alinhados com a conta Cloudflare e o endereço Netlify do projeto.
-5. Na área **Responsáveis**, escolher **Criar primeira conta**, informar o e-mail/senha-frase da família e usar `LAURINHA_SETUP_TOKEN` uma única vez. Guarde os dois segredos fora do Git: o token é necessário para recuperar o acesso; trocar o pepper exige redefinir a senha. Não colocar credenciais da família no repositório.
+3. O proxy de `netlify.toml` aponta para `mundo-da-laurinha-api.dona-de-ouro-demo.workers.dev`; mantenha esse destino e `APP_ORIGIN` alinhados com a conta Cloudflare e o endereço Netlify do projeto.
+4. Na área **Responsáveis**, a família cria a primeira conta com seu e-mail, uma senha-frase forte e o token de configuração fornecido separadamente. O token também é necessário para recuperar o acesso; trocar o pepper exige redefinir a senha. Não coloque credenciais da família no repositório.
 
-## Publicação coordenada
+## Publicação e manutenção
 
-O deploy de produção deve acontecer uma única vez após:
-
-- [x] confirmar que a conta GitHub dona do repositório privado `mundo-da-laurinha` tem permissão de escrita pela conexão usada;
-- [x] revisar e versionar o projeto completo, a migração, a documentação e os recursos visuais aprovados;
-- [x] instalar dependências e obter `npm run typecheck`, `npm test` e `npm run build` sem erros;
-- [ ] validar os 20 fluxos de jogo em celular, tablet e desktop, incluindo navegação por teclado e redução de movimento;
-- [ ] aplicar e conferir a migração D1;
-- [x] definir `APP_ORIGIN` e alinhar o proxy com o subdomínio Workers da conta, sem salvar segredos no Git;
-- [ ] cadastrar os segredos de configuração no Worker fora do Git;
-- [ ] testar login/logout, sincronização entre aparelhos, modo offline, retomada da conexão e bloqueio da área adulta;
-- [ ] conferir que os dados sincronizados não incluem respostas, desenhos ou informações pessoais da criança;
-- [ ] publicar uma única vez o frontend conectado ao repositório e o Worker já configurado.
-
-Não publicar durante esta preparação. Após os gates, fazer uma implantação coordenada do Worker e da interface, sem publicar etapas intermediárias.
+- O repositório `Salmeida-webdev/mundo-da-laurinha` permanece privado; a produção do site é pública e os previews permanecem privados.
+- A branch `main` está conectada ao Netlify. Cada novo commit nessa branch inicia automaticamente um deploy de produção; agrupe e valide as alterações antes de enviar o commit.
+- Execute `npm run typecheck`, `npm test` e `npm run build` localmente antes de atualizar `main`. Essas validações não iniciam um deploy Netlify.
+- A política de segurança em `netlify.toml` restringe scripts ao próprio site (`script-src 'self'`), seguindo a configuração do Alpendre. Não remova essa diretiva sem revisar a segurança e confirmar que o selo da plataforma não voltou a aparecer.
+- O service worker instala os recursos estáticos para uso offline depois da primeira visita. A conta adulta e a sincronização entre dispositivos exigem conexão com a API.
