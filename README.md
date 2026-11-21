@@ -54,6 +54,17 @@ npm run cf:dev
 
 O Vite encaminha `/api/*` para `http://127.0.0.1:8787`. Crie `.dev.vars` a partir de `.dev.vars.example` e defina dois valores aleatórios diferentes, longos, para `LAURINHA_SETUP_TOKEN` e `PASSWORD_PEPPER`. O arquivo real fica ignorado pelo Git.
 
+## Validar antes do deploy
+
+```bash
+npm run typecheck
+npm test
+npm run build
+npm audit --omit=dev
+```
+
+Os testes exercitam o catálogo de 20 brincadeiras, a combinação do progresso e as rotas de configuração, sessão, login, recuperação e sincronização do Worker com um adaptador D1 de teste em memória.
+
 ## Banco remoto criado
 
 - Conta: conta Cloudflare conectada ao projeto.
